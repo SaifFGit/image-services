@@ -1,6 +1,6 @@
 # image-services
 
-Run instructions:
+# Run Instructions
 
 pip install -r requirements.txt <br>
 python3 app.py
