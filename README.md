@@ -2,5 +2,5 @@
 
 Run instructions:
 
-pip install socket.io
+pip install -r requirements.txt <br>
 python3 app.py
