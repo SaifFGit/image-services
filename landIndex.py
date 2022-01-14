@@ -4,6 +4,7 @@ import requests
 import io
 import cv2
 from icecream import ic
+import base64
 # import folium
 # from folium import plugins
 from IPython.display import Image
@@ -42,7 +43,32 @@ def getIndex(lat, lon, startDate, endDate, landIndexDataset, indexName, scale=30
     })
     response = requests.get(url)
     data = np.load(io.BytesIO(response.content))
-    cv2.imshow(indexName, data.astype(np.float32))
-    cv2.waitKey(0)
 
-    return url
+    # convert data into 0-255 grayscale image array
+    image = data.astype(np.float32)
+    image = (image + 1) * 127.5
+    image = image.astype(np.uint8)
+
+    print(image.shape)
+
+    # show converted image
+    # cv2.imshow(indexName, image)
+    # cv2.waitKey(0)
+
+    # decode into base64 string
+    _, image_bytes = cv2.imencode('.jpg', image)
+    image_bytes = image_bytes.tobytes()
+    im_b64 = base64.b64encode(image_bytes)
+    b64_string = im_b64.decode('ascii')
+
+    # return base 64 image string
+    return b64_string
+
+    # Additional code for decoding base64 string into image
+
+    # im_bytes = base64.b64decode(im_b64)
+    # im_arr = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    # img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+    #
+    # cv2.imshow(indexName, img)
+    # cv2.waitKey(0)
